@@ -28,6 +28,9 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        currentTimeField.font = NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
+        endTimeField.font = NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
     }
 
     override func viewDidAppear() {
