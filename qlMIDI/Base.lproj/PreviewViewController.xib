@@ -1,56 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreviewViewController" customModule="qlMIDI" customModuleProvider="target">
             <connections>
+                <outlet property="currentPlaybackTimeLabel" destination="OgE-g1-pVW" id="hY7-IQ-zrj"/>
+                <outlet property="filenameLabel" destination="pL7-zz-Pqf" id="AGF-UC-pKZ"/>
                 <outlet property="playButton" destination="kgX-sW-HT8" id="ueR-Nt-Avj"/>
                 <outlet property="theSlider" destination="w6L-AA-SsK" id="9ZI-uQ-ce8"/>
+                <outlet property="totalTimeLabel" destination="dtx-ky-YSl" id="gRd-aP-xt0"/>
                 <outlet property="view" destination="c22-O7-iKe" id="NRM-P4-wb6"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe" userLabel="Preview View">
-            <rect key="frame" x="0.0" y="0.0" width="170" height="272"/>
+            <rect key="frame" x="0.0" y="0.0" width="730" height="444"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dv4-Yr-ONd">
-                    <rect key="frame" x="69" y="112" width="32" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="BacktoPreview" imagePosition="only" alignment="center" controlSize="mini" imageScaling="proportionallyUpOrDown" inset="2" id="fSP-xg-w4v">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="miniSystem"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="backToStart:" target="-2" id="29c-MF-DeC"/>
-                    </connections>
-                </button>
-                <progressIndicator fixedFrame="YES" maxValue="100" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="w6L-AA-SsK">
-                    <rect key="frame" x="69" y="48" width="32" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <progressIndicator maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="w6L-AA-SsK">
+                    <rect key="frame" x="108" y="47" width="514" height="20"/>
                 </progressIndicator>
-                <button autoresizesSubviews="NO" id="kgX-sW-HT8">
-                    <rect key="frame" x="53" y="180" width="64" height="64"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Play" imagePosition="only" alignment="center" alternateImage="Pause" controlSize="small" imageScaling="proportionallyUpOrDown" inset="2" id="lAW-s6-wpg">
-                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="playSwitch:" target="-2" id="IOP-Qi-1kl"/>
-                    </connections>
-                </button>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="bOk-7t-w87">
+                    <rect key="frame" x="0.0" y="86" width="730" height="272"/>
+                    <subviews>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f6y-s3-a4W" userLabel="AppIcon">
+                            <rect key="frame" x="20" y="8" width="256" height="256"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="256" id="RYg-KO-fVU"/>
+                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="256" id="xPh-i6-hwq"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="previewIcon" id="1Sn-xq-Riw"/>
+                        </imageView>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pL7-zz-Pqf">
+                            <rect key="frame" x="310" y="202" width="162" height="26"/>
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" title="song_name.midi" usesSingleLineMode="YES" id="X8W-hr-Nsc">
+                                <font key="font" textStyle="title1" name=".SFNS-Regular"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="Dv4-Yr-ONd" userLabel="RestartButton">
+                            <rect key="frame" x="412" y="115" width="39" height="39"/>
+                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="BacktoPreview" imagePosition="only" alignment="center" controlSize="mini" imageScaling="proportionallyUpOrDown" inset="2" id="fSP-xg-w4v">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="miniSystem"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="backToStart:" target="-2" id="29c-MF-DeC"/>
+                            </connections>
+                        </button>
+                        <button autoresizesSubviews="NO" springLoaded="YES" id="kgX-sW-HT8" userLabel="PlayPauseButton">
+                            <rect key="frame" x="312" y="102" width="64" height="64"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Play" imagePosition="only" alignment="center" alternateImage="Pause" controlSize="small" imageScaling="proportionallyUpOrDown" inset="2" id="lAW-s6-wpg">
+                                <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="smallSystem"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="playSwitch:" target="-2" id="IOP-Qi-1kl"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="pL7-zz-Pqf" firstAttribute="leading" secondItem="f6y-s3-a4W" secondAttribute="trailing" constant="36" id="2if-qi-dQj"/>
+                        <constraint firstItem="kgX-sW-HT8" firstAttribute="leading" secondItem="f6y-s3-a4W" secondAttribute="trailing" constant="36" id="ABA-0E-lxM"/>
+                        <constraint firstItem="f6y-s3-a4W" firstAttribute="leading" secondItem="bOk-7t-w87" secondAttribute="leading" constant="20" id="IEy-UK-mMu"/>
+                        <constraint firstItem="kgX-sW-HT8" firstAttribute="top" secondItem="pL7-zz-Pqf" secondAttribute="bottom" constant="36" id="NCS-Fy-Tly"/>
+                        <constraint firstItem="f6y-s3-a4W" firstAttribute="centerY" secondItem="bOk-7t-w87" secondAttribute="centerY" id="Shw-4F-7bz"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pL7-zz-Pqf" secondAttribute="trailing" constant="20" id="UD3-uD-cid"/>
+                        <constraint firstItem="pL7-zz-Pqf" firstAttribute="top" secondItem="f6y-s3-a4W" secondAttribute="top" constant="36" id="YFg-S5-yJQ"/>
+                        <constraint firstItem="Dv4-Yr-ONd" firstAttribute="centerY" secondItem="kgX-sW-HT8" secondAttribute="centerY" id="q6E-9c-fg5"/>
+                        <constraint firstItem="Dv4-Yr-ONd" firstAttribute="leading" secondItem="kgX-sW-HT8" secondAttribute="trailing" constant="36" id="sA5-fO-rdZ"/>
+                    </constraints>
+                </customView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dtx-ky-YSl" userLabel="totalTime">
+                    <rect key="frame" x="632" y="48" width="52" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="48" id="L37-fk-us4"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="3:00" id="GWz-vh-FrC">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OgE-g1-pVW" userLabel="currentTime">
+                    <rect key="frame" x="46" y="48" width="52" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="48" id="qO5-4i-T8S"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="0:00" id="XwH-7S-bWU">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
-            <point key="canvasLocation" x="-16.5" y="154"/>
+            <constraints>
+                <constraint firstItem="w6L-AA-SsK" firstAttribute="leading" secondItem="OgE-g1-pVW" secondAttribute="trailing" constant="12" id="0zC-Ca-nCS"/>
+                <constraint firstAttribute="trailing" secondItem="bOk-7t-w87" secondAttribute="trailing" id="BiZ-mN-Hbd"/>
+                <constraint firstItem="bOk-7t-w87" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="SXP-4s-VNB"/>
+                <constraint firstItem="OgE-g1-pVW" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="48" id="U6G-Ur-kI4"/>
+                <constraint firstAttribute="bottom" secondItem="w6L-AA-SsK" secondAttribute="bottom" constant="48" id="VVc-g2-vaD"/>
+                <constraint firstAttribute="bottom" secondItem="dtx-ky-YSl" secondAttribute="bottom" constant="48" id="tgG-G0-Ysh"/>
+                <constraint firstAttribute="bottom" secondItem="OgE-g1-pVW" secondAttribute="bottom" constant="48" id="xXk-1g-Y8P"/>
+                <constraint firstItem="bOk-7t-w87" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="yVZ-ye-xey"/>
+                <constraint firstAttribute="trailing" secondItem="dtx-ky-YSl" secondAttribute="trailing" constant="48" id="yZe-gK-TaX"/>
+                <constraint firstItem="w6L-AA-SsK" firstAttribute="top" relation="greaterThanOrEqual" secondItem="bOk-7t-w87" secondAttribute="bottom" id="z23-JX-Qxv"/>
+                <constraint firstItem="dtx-ky-YSl" firstAttribute="leading" secondItem="w6L-AA-SsK" secondAttribute="trailing" constant="12" id="zZ5-52-Ocy"/>
+            </constraints>
+            <point key="canvasLocation" x="263" y="391"/>
         </customView>
     </objects>
     <resources>
         <image name="BacktoPreview" width="39" height="39"/>
         <image name="Pause" width="128" height="128"/>
         <image name="Play" width="128" height="128"/>
+        <image name="previewIcon" width="256" height="256"/>
     </resources>
 </document>
