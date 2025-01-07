@@ -40,9 +40,8 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
     @IBAction func backToStart(_ sender: Any) {
         if viewMIDIPlayer != nil {
-           // self.viewMIDIPlayer!.stop()
             viewMIDIPlayer!.currentPosition = TimeInterval(0)
-            playButton.state=NSControl.StateValue.on
+            playButton.state = NSControl.StateValue.on
             viewMIDIPlayer!.prepareToPlay()
             viewMIDIPlayer!.play(self.completed())
         }
@@ -50,8 +49,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
     func completed() -> AVMIDIPlayerCompletionHandler {
         return {
-            self.playButton.state=NSControl.StateValue.off
-            
+            self.playButton.state = NSControl.StateValue.off
          }
     }
 
@@ -67,6 +65,8 @@ class PreviewViewController: NSViewController, QLPreviewingController {
      */
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
+        preferredContentSize = NSSize(width: 600, height: 400)
+        
         do {
             currentPlaybackTimeLabel.font = NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
             totalTimeLabel.font = NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
