@@ -12,36 +12,67 @@ import AVFoundation
 
 class PreviewViewController: NSViewController, QLPreviewingController {
 
+
     override var nibName: NSNib.Name? {
         return NSNib.Name("PreviewViewController")
     }
 
     var viewMIDIPlayer: AVMIDIPlayer!
 
+    @IBOutlet weak var finderView: NSView!
+
+    @IBOutlet weak var quickLookView: NSView!
+    
     @IBOutlet weak var currentPlaybackTimeLabel: NSTextField!
     @IBOutlet weak var totalTimeLabel: NSTextField!
     @IBOutlet weak var filenameLabel: NSTextField!
     @IBOutlet weak var playButton: NSButton!
     @IBOutlet weak var theSlider: NSProgressIndicator!
 
+    @IBOutlet weak var restartButton: NSButton!
+    
+    @IBOutlet weak var finderRestartButton: NSButton!
+    @IBOutlet weak var finderPlayButton: NSButton!
+    @IBOutlet weak var finderProgressCircle: NSProgressIndicator!
+    
+
+
     override func loadView() {
         super.loadView()
         // Do any additional setup after loading the view.
         preferredContentSize = CGSize(width: 800, height: 350)
+
+        let v = (self.view as? QLPreviewView)
+        v?.autostarts = false
+
+        finderPlayButton.target = self
+        finderPlayButton.action = #selector(self.playPause)
+        finderRestartButton.target = self
+        finderRestartButton.action = #selector(self.restart)
+
+        playButton.target = self
+        playButton.action = #selector(self.playPause)
+        restartButton.target = self
+        restartButton.action = #selector(self.restart)
     }
 
-    @IBAction func playSwitch(_ sender: NSButton) {
+    @objc func playPause() {
         if (viewMIDIPlayer!.isPlaying) {
             viewMIDIPlayer!.stop()
+            playButton.state = NSControl.StateValue.off
+            finderPlayButton.state = NSControl.StateValue.off
         } else {
             viewMIDIPlayer!.play(self.completed())
+            playButton.state = NSControl.StateValue.on
+            finderPlayButton.state = NSControl.StateValue.on
         }
     }
 
-    @IBAction func backToStart(_ sender: Any) {
+    @objc func restart() {
         if viewMIDIPlayer != nil {
             viewMIDIPlayer!.currentPosition = TimeInterval(0)
             playButton.state = NSControl.StateValue.on
+            finderPlayButton.state = NSControl.StateValue.on
             viewMIDIPlayer!.prepareToPlay()
             viewMIDIPlayer!.play(self.completed())
         }
@@ -50,6 +81,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     func completed() -> AVMIDIPlayerCompletionHandler {
         return {
             self.playButton.state = NSControl.StateValue.off
+            self.finderPlayButton.state = NSControl.StateValue.off
          }
     }
 
@@ -65,8 +97,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
      */
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
-        preferredContentSize = NSSize(width: 600, height: 400)
-        
+
         do {
             currentPlaybackTimeLabel.font = NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
             totalTimeLabel.font = NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
@@ -74,7 +105,9 @@ class PreviewViewController: NSViewController, QLPreviewingController {
             viewMIDIPlayer = try AVMIDIPlayer.init(contentsOf: url, soundBankURL: nil)
             viewMIDIPlayer?.prepareToPlay()
             theSlider.maxValue = Double(self.viewMIDIPlayer?.duration ?? 0.0)
+            finderProgressCircle.maxValue = Double(self.viewMIDIPlayer?.duration ?? 0.0)
             filenameLabel.stringValue = url.lastPathComponent
+            filenameLabel.frame.size.width = CGFloat(filenameLabel.stringValue.count * 13)
             currentPlaybackTimeLabel.stringValue = "0:00"
 
             if let time = self.viewMIDIPlayer?.duration {
@@ -104,8 +137,18 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     }
 
     override func viewDidAppear() {
-        viewMIDIPlayer?.play(self.completed())
-        playButton.state = .on
+        if let width = self.view.window?.frame.width, width < 600.0 {
+            //Finder View
+            self.finderView.isHidden = false
+            self.quickLookView.isHidden = true
+        } else {
+            // QuickLook Window
+            self.finderView.isHidden = true
+            self.quickLookView.isHidden = false
+
+            self.viewMIDIPlayer?.play(self.completed())
+            self.playButton.state = .on
+        }
     }
 
     @objc func updateDisplay(){
@@ -116,6 +159,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                     let minutes = Int(currentPosition / 60)
                     let seconds = Int((currentPosition)) % 60
                     currentPlaybackTimeLabel.stringValue =  String(format: "%01d:%02d", minutes, seconds)
+                    finderProgressCircle.doubleValue = Double((viewMIDIPlayer!.currentPosition))
                 }
             }
         }
